@@ -23,9 +23,9 @@ python3 geocode.py ../Data/geocode ../Data/geocoderesult
 # Concatenate all files into one
 cat ../Data/geocoderesult/*.csv > ../Data/geocoderesult/geocoderesult.csv
 # Get the Matches
-grep -hr "Exact" ../Data/geocoderesult/geocoderesult.csv > ../Data/geocoderesult/matches.csv
+grep -hr "Exact" ../Data/geocoderesult/geocoderesult.csv > ../Data/AddressMatches.csv
 # And the failures
-grep -hr "No_Match" ../Data/geocoderesult/geocoderesult.csv > ../Data/geocoderesult/no_match.csv
+grep -hr "No_Match" ../Data/geocoderesult/geocoderesult.csv > ../Data/AddressNoMatch.csv
 
 # Remove placeholding files
 rm -r ../Data/geocoderesult
