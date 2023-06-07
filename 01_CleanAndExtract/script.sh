@@ -18,6 +18,7 @@ Rscript binders.R
 # Terrible choice of names in this section but I am sticking with them!
 python3 clean.py ../Data/targeted_cases.csv
 python3 clean.py ../Data/bruteforce_cases.csv
+
 # Combines both the cleaned sets of data and writing a separate file
 # AllEvictionCases.csv
 python3 combiner.py

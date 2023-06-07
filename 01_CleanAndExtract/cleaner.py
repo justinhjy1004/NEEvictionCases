@@ -18,7 +18,14 @@ def judgement_of_restitution(judgement_info):
             return False
         else: 
             return True
+        
 
+
+"""
+Identify correctly Plaintiff and Attorney
+Input: Parties
+Output: Plaintiff and Attorney
+"""
 def plaintiff_and_attorney(parties):
 
     if type(parties) != str:
@@ -35,22 +42,6 @@ def plaintiff_and_attorney(parties):
     attorney = x.group(3).strip()
 
     return plaintiff, attorney
-
-def defendant_and_attorney(parties):
-
-    if type(parties) != str:
-        return None, None
-    
-    pattern = "Defendant (.*?)[\s]{3,}(.*?)[^\S\r\n]{2,}(.*?)\n"
-    x = re.search(pattern, parties)
-
-    if x is None:
-        return None, None
-    
-    defendant = x.group(2).strip()
-    attorney = x.group(3).strip()
-
-    return defendant, attorney
 
 """
 Identify correctly Defendant and Attorney
@@ -72,6 +63,37 @@ def defendant_and_attorney(parties):
     attorney = x.group(3).strip()
 
     return defendant, attorney
+
+"""
+Identify limited representation attorney 
+and the name of the corresponding attorney
+Input: Parties
+Output: Indicator of Limited Rep attorney and Attorney Name
+"""
+def limited_rep_attorney(parties):
+
+    if type(parties) != str:
+        return False, None, None
+    
+    pattern = r"Limited Representation Attorney (.*?)[\s]{3,}(.*?)[^\S\r\n]{2,}(.*?)\n"
+
+    x = re.search(pattern, parties)
+
+    if x is None:
+        return False, None, None
+    
+    status = x.group(1).strip()
+
+    if status != "ACTIVE":
+        has_limited_representation = False
+    else:
+        has_limited_representation = True
+    
+    limited_representation_attorney = x.group(2).strip()
+
+    return has_limited_representation, status, limited_representation_attorney
+
+
 
 """
 Helper function for get_address()
@@ -276,8 +298,11 @@ def case_information(case_id):
 If Writ of Restitution was served and corresponding date
 Input: Actions
 """
-def writ_served(actions):
+def writ_served(writ, actions):
     
+    if writ == False:
+        return False, None
+
     if type(actions) != str:
         return None, None
     
