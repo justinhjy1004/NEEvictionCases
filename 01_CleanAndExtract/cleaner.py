@@ -70,7 +70,7 @@ and the name of the corresponding attorney
 Input: Parties
 Output: Indicator of Limited Rep attorney and Attorney Name
 """
-def limited_rep_attorney(parties):
+def limited_rep_attorney(parties, actions):
 
     if type(parties) != str:
         return False, None, None
@@ -79,19 +79,30 @@ def limited_rep_attorney(parties):
 
     x = re.search(pattern, parties)
 
+    if x is not None:
+        status = x.group(1).strip()
+
+        if status != "ACTIVE":
+            has_limited_representation = False
+        else:
+            has_limited_representation = True
+        
+        limited_representation_attorney = x.group(2).strip()
+
+        return has_limited_representation, status, limited_representation_attorney
+
+
     if x is None:
-        return False, None, None
-    
-    status = x.group(1).strip()
+        pattern = r"Limited (Representation|Appearance)"
+        
+        x = re.search(pattern, actions, flags=re.IGNORECASE)
 
-    if status != "ACTIVE":
-        has_limited_representation = False
-    else:
-        has_limited_representation = True
+        if x is None:
+            return False, None, None
+        else:
+            return True, True, None
     
-    limited_representation_attorney = x.group(2).strip()
 
-    return has_limited_representation, status, limited_representation_attorney
 
 
 
@@ -306,7 +317,7 @@ def writ_served(writ, actions):
     if type(actions) != str:
         return None, None
     
-    pattern = r"Return-Cover Sheet(.*?)[\s]{1,}(.*?)document number(.*?)[\s]{1,}(.*?)Served(.*?),"
+    pattern = r"Return-Cover Sheet/Civil Type(.*?)[\s]{1,}(.*?)document number(.*?)[\s]{1,}(.*?)Served(.*?),"
     x = re.search(pattern, actions, re.IGNORECASE)
     
     if x is None:
@@ -316,6 +327,25 @@ def writ_served(writ, actions):
     served_date = x.group(5).strip()
     
     return served, served_date 
+
+"""
+If Case was Dismissed and corresponding date
+Input: Actions
+"""
+def order_dismissal(actions):
+    if type(actions) != str:
+        return False, None
+    
+    pattern = r"(.*?)Order-Dismissal"
+    x = re.search(pattern, actions, re.IGNORECASE)
+
+    if x is None:
+        return False, None
+    
+    dismissed = True
+    dismissal_date = x.group(1).strip()
+
+    return dismissed, dismissal_date
 
 """
 If plaintiff changed the locks and corresponding date
