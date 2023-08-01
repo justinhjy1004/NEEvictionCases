@@ -41,6 +41,10 @@ if __name__ == '__main__':
     df["REMAINING_CAUSES"] = df.ACTIONS.apply(cleaner.remaining_causes)
     df["DEFENDANTS_ADDRESS"] = df.apply(lambda x: cleaner.get_address(x.DEFENDANT, x.DEFENDANT_ATTORNEY, x.PARTIES), axis=1)
 
+    df["HEARINGS"] = df["ACTIONS"].apply(cleaner.hearings)
+    df["NUM_HEARINGS"] = df["HEARINGS"].apply(lambda x: len(x))
+    df["FIRST_HEARING"] = df["HEARINGS"].apply(lambda x: x[-1] if len(x) != 0 else None)
+
     print("Writing to " + file)
 
     df.to_csv(file, index=None)

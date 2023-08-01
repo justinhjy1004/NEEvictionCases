@@ -434,3 +434,16 @@ def lien(actions):
         return False
     
     return True
+
+"""
+Get all instances of hearings
+Input: Actions
+"""
+def hearings(actions):
+
+    pattern = "(.*?) Hearing"
+    x = re.findall(pattern, actions)
+    hearings = [d.strip() for d in x]
+    hearings = [d for d in hearings if re.match("[0-9]{2}/[0-9]{2}/[0-9]{4}", d) is not None]
+
+    return hearings

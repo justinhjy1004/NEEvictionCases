@@ -11,6 +11,17 @@ import sys
 import re
 
 """
+Helper function for get_address()
+Input: text
+Output: return the first half of the text
+"""
+def get_half(text):
+    n = len(text)
+    half = round(n/2)
+    
+    return text[:half]
+
+"""
 Obtain Defendant's Address
 Input: Defendant, Attorney and Parties
 Output: Defendant's address
